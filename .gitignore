@@ -8,6 +8,7 @@ pip-selfcheck.json
 
 # sqlite persisted docker volume data
 database/
+aitaws/app.db
 
 # pytest
 .pytest_cache/
