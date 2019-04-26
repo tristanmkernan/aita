@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% block title %}{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bulma.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Chart.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fa/css/font-awesome.min.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
+
+
+    <style>
+        .my-1 {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .my-0-5 {
+            margin: 0.5rem 0;
+        }
+
+        article.my-upload-error {
+            max-width: 20rem;
+            margin: 1rem auto;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .flexify-me {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                <img src="{{ url_for('static', filename='image/logo.png') }}" alt="logo" title="Made with GIMP"
+                     width="72" height="28">
+            </a>
+
+            <div class="navbar-burger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div class="navbar-menu">
+            <div class="navbar-end">
+                <a class="navbar-item" href="{{ url_for('index') }}">
+			    <span class="icon">
+				<i class="fa fa-home"></i>
+			    </span>
+                    <span>Home</span>
+                </a>
+                <a class="navbar-item" href="{{ url_for('about') }}">
+			    <span class="icon">
+				<i class="fa fa-info"></i>
+			    </span>
+                    <span>About</span>
+                </a>
+                <a class="navbar-item" href="https://github.com/tristanmkernan/aita">
+			    <span class="icon">
+				<i class="fa fa-github"></i>
+			    </span>
+                    <span>Github</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+{% block main %}{% endblock %}
+
+<footer class="footer">
+    <div class="container">
+        <div class="content has-text-centered">
+            <p class="is-italic">
+                Please note: insert witty statement here!
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/jquery-3.3.1.slim.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/Chart.bundle.min.js') }}"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.navbar-burger')
+            .click(function () {
+                $(this).toggleClass('is-active');
+                $('.navbar-menu').toggleClass('is-active');
+            });
+    });
+</script>
+
+{% block extrascripts %}{% endblock %}
+</body>
+</html>

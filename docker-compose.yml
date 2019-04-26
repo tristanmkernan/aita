@@ -1,0 +1,16 @@
+version: '3'
+services:
+  web:
+    environment:
+      AITA_SETTINGS: "/app/env/docker.env"
+    build: .
+    ports:
+      - "8090:80"
+    restart: always
+  worker:
+    environment:
+      AITA_SETTINGS: "/app/env/docker.env"
+      build: .
+      ports:
+        - "8090:80"
+      restart: always

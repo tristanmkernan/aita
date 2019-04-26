@@ -1,0 +1,52 @@
+{% extends "skeleton.html" %}
+
+{% block title %}Who's the Asshole?{% endblock %}
+
+{% block main %}
+    <div class="container has-text-centered my-1 flexify-me">
+        <h1 class="title">
+            Is Reddit the Asshole?
+        </h1>
+
+        <canvas id="myChart"></canvas>
+
+        <section class="section">
+            After seeing <a href="https://www.reddit.com/r/AmItheAsshole/">/r/AmItheAsshole/</a> in my feed a bit too
+            often, and finding that MOST people were definitely
+            the asshole and merely seeking validation for their shitty behavior, I just had to put it to the test and
+            record the results over a decent period of time. You're welcome to participate! Go to <a
+                href="https://www.reddit.com/r/AmItheAsshole/">/r/AmItheAsshole/</a>,
+            read the stories, and make your judgment!
+        </section>
+    </div>
+{% endblock %}
+
+{% block extrascripts %}
+    <script>
+        $(document)
+            .ready(function () {
+                var ctx = document.getElementById('myChart').getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        datasets: [
+                            {
+                                data: [75, 15, 10],
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                ]
+                            },
+                        ],
+                        labels: [
+                            'YTA',
+                            'NTA',
+                            'ESH'
+                        ]
+                    },
+                    options: {}
+                });
+            });
+    </script>
+{% endblock %}
