@@ -4,4 +4,5 @@
 # sleep 5;
 
 # initialize the database
-# flask db upgrade
+touch /app/aitaws/prod.db
+flask create_db

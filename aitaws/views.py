@@ -13,9 +13,10 @@ def init_views(app):
 
         total = yta + nta + esh
 
-        yta = int(100 * yta / total)
-        nta = int(100 * nta / total)
-        esh = int(100 * esh / total)
+        if total > 0:
+            yta = int(100 * yta / total)
+            nta = int(100 * nta / total)
+            esh = int(100 * esh / total)
 
         return render_template('index.html', yta=yta, nta=nta, esh=esh)
 

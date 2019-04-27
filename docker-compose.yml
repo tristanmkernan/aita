@@ -2,15 +2,29 @@ version: '3'
 services:
   web:
     environment:
-      AITA_SETTINGS: "/app/env/docker.env"
+      AITAWS_SETTINGS: "/app/env/docker.env"
     build: .
     ports:
       - "8090:80"
     restart: always
+    volumes:
+      - ${PWD}/aitaws/prod.db:/app/aitaws/prod.db
   worker:
     environment:
-      AITA_SETTINGS: "/app/env/docker.env"
-      build: .
-      ports:
-        - "8090:80"
-      restart: always
+      AITAWS_SETTINGS: "/app/env/docker.env"
+    build: .
+    command: celery worker -A aitaws.worker -l info
+    restart: always
+    volumes:
+      - ${PWD}/aitaws/prod.db:/app/aitaws/prod.db
+  scheduler:
+    environment:
+      AITAWS_SETTINGS: "/app/env/docker.env"
+    build: .
+    command: celery beat -A aitaws.worker -l info
+    restart: always
+    volumes:
+      - ${PWD}/aitaws/prod.db:/app/aitaws/prod.db
+  redis:
+    image: redis:alpine
+    restart: always
