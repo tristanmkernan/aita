@@ -16,7 +16,7 @@ def scrape(client_id, client_secret, user_agent):
 
     data = []
 
-    for submission in reddit.subreddit('AmItheAsshole').hot(limit=5):
+    for submission in reddit.subreddit('AmItheAsshole').hot(limit=50):
         counts = Counter()
 
         for comment in submission.comments:

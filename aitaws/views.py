@@ -1,10 +1,23 @@
 from flask import render_template
+from sqlalchemy import and_
+
+from .models import PostModel
 
 
 def init_views(app):
     @app.route('/')
     def index():
-        return render_template('index.html')
+        yta = PostModel.query.filter(and_(PostModel.yta > PostModel.nta, PostModel.yta > PostModel.esh)).count()
+        nta = PostModel.query.filter(and_(PostModel.nta > PostModel.yta, PostModel.nta > PostModel.esh)).count()
+        esh = PostModel.query.filter(and_(PostModel.esh > PostModel.yta, PostModel.esh > PostModel.nta)).count()
+
+        total = yta + nta + esh
+
+        yta = int(100 * yta / total)
+        nta = int(100 * nta / total)
+        esh = int(100 * esh / total)
+
+        return render_template('index.html', yta=yta, nta=nta, esh=esh)
 
     @app.route('/about')
     def about():

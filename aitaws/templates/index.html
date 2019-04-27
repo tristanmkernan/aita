@@ -31,7 +31,11 @@
                     data: {
                         datasets: [
                             {
-                                data: [75, 15, 10],
+                                data: [
+                                    {{ yta }},
+                                    {{ nta }},
+                                    {{ esh }}
+                                ],
                                 backgroundColor: [
                                     'rgba(255, 99, 132, 0.2)',
                                     'rgba(54, 162, 235, 0.2)',
@@ -40,9 +44,9 @@
                             },
                         ],
                         labels: [
-                            'YTA',
-                            'NTA',
-                            'ESH'
+                            'YTA %',
+                            'NTA %',
+                            'ESH %'
                         ]
                     },
                     options: {}
