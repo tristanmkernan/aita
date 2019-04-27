@@ -2,6 +2,7 @@ from flask import render_template
 from sqlalchemy import and_
 
 from .models import PostModel
+from .tasks import tasks
 
 
 def init_views(app):
@@ -19,6 +20,12 @@ def init_views(app):
             esh = int(100 * esh / total)
 
         return render_template('index.html', yta=yta, nta=nta, esh=esh)
+
+    @app.route('/scrape')
+    def scrape():
+        if app.config['DEVELOPMENT']:
+            tasks['scrape'].delay()
+        return 'OK', 200
 
     @app.route('/about')
     def about():

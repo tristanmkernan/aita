@@ -27,7 +27,7 @@ def scrape(client_id, client_secret, user_agent, num_posts):
 
             for judgment in ('yta', 'nta', 'esh'):
                 if body.startswith(judgment):
-                    counts[judgment] += 1
+                    counts[judgment] += comment.score
 
         # do not load zero-vote posts
         if sum(counts.values()) > 0:
@@ -45,5 +45,7 @@ def scrape(client_id, client_secret, user_agent, num_posts):
         post.yta = counts['yta']
         post.nta = counts['nta']
         post.esh = counts['esh']
+
+    # TODO compute the tallies of yta, nta, esh as percentages of total and cache in db
 
     db.session.commit()
