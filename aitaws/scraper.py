@@ -9,14 +9,14 @@ from .models import db, PostModel
 # https://praw.readthedocs.io/en/latest/tutorials/comments.html
 
 
-def scrape(client_id, client_secret, user_agent):
+def scrape(client_id, client_secret, user_agent, num_posts):
     reddit = Reddit(client_id=client_id,
                     client_secret=client_secret,
                     user_agent=user_agent)
 
     data = []
 
-    for submission in reddit.subreddit('AmItheAsshole').hot(limit=50):
+    for submission in reddit.subreddit('AmItheAsshole').hot(limit=num_posts):
         counts = Counter()
 
         for comment in submission.comments:

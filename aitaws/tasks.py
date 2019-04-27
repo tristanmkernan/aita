@@ -27,12 +27,13 @@ def init_tasks(app=None):
     def my_scraper():
         return scrape(app.config['PRAW_CLIENT_ID'],
                       app.config['PRAW_CLIENT_SECRET'],
-                      app.config['PRAW_USER_AGENT'])
+                      app.config['PRAW_USER_AGENT'],
+                      app.config['SCRAPER_NUM_POSTS_TO_SCRAPE'])
 
     stalk.conf.beat_schedule = {
         'scraper': {
             'task': 'aitaws.tasks.my_scraper',
-            'schedule': 60.0 * 30.0  # Every 30 minutes
+            'schedule': app.config['SCRAPER_INTERVAL_SECONDS']
         }
     }
 
