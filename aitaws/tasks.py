@@ -32,7 +32,7 @@ def init_tasks(app=None):
     stalk.conf.beat_schedule = {
         'scraper': {
             'task': 'aitaws.tasks.my_scraper',
-            'schedule': 60.0 * 60.0
+            'schedule': 60.0 * 30.0  # Every 30 minutes
         }
     }
 
