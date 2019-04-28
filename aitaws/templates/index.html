@@ -11,12 +11,54 @@
         <canvas id="myChart"></canvas>
 
         <section class="section">
-            After seeing <a href="https://www.reddit.com/r/AmItheAsshole/">/r/AmItheAsshole/</a> in my feed a bit too
-            often, and finding that MOST people were definitely
-            the asshole and merely seeking validation for their shitty behavior, I just had to put it to the test and
-            record the results over a decent period of time. You're welcome to participate! Go to <a
-                href="https://www.reddit.com/r/AmItheAsshole/">/r/AmItheAsshole/</a>,
-            read the stories, and make your judgment!
+            <nav class="level">
+                <div class="level-item has-text-centered">
+                    <div>
+                        <p class="heading">YTA #</p>
+                        <p class="title">{{ yta['count'] }}</p>
+                    </div>
+                </div>
+                <div class="level-item has-text-centered">
+                    <div>
+                        <p class="heading">NTA #</p>
+                        <p class="title">{{ nta['count'] }}</p>
+                    </div>
+                </div>
+                <div class="level-item has-text-centered">
+                    <div>
+                        <p class="heading">ESH #</p>
+                        <p class="title">{{ esh['count'] }}</p>
+                    </div>
+                </div>
+                <div class="level-item has-text-centered">
+                    <div>
+                        <p class="heading">Total #</p>
+                        <p class="title">{{ total }}</p>
+                    </div>
+                </div>
+            </nav>
+        </section>
+
+        <section class="section">
+            <p class="heading">What is this?</p>
+            <p>
+                After seeing <a href="https://www.reddit.com/r/AmItheAsshole/">/r/AmItheAsshole/</a> in my feed a bit
+                too often, and finding that MOST people were definitely the asshole and merely seeking validation for
+                their shitty behavior, I just had to put it to the test and
+                record the results over a decent period of time. You're welcome to participate! Go to <a
+                    href="https://www.reddit.com/r/AmItheAsshole/">/r/AmItheAsshole/</a>,
+                read the stories, and make your judgment!
+            </p>
+        </section>
+
+        <section class="section">
+            <p class="heading">Methodology</p>
+            <p>
+                Every so often, the hottest posts from <a href="https://www.reddit.com/r/AmItheAsshole/">/r/AmItheAsshole/</a>
+                are scraped. For each post, the votes
+                are tallied by counting the score of each top-level comment starting with either YTA, NTA, or ESH.
+                The post is marked for whichever of the three receives the highest combined score.
+            </p>
         </section>
     </div>
 {% endblock %}
@@ -32,9 +74,9 @@
                         datasets: [
                             {
                                 data: [
-                                    {{ yta }},
-                                    {{ nta }},
-                                    {{ esh }}
+                                    {{ yta['percent'] }},
+                                    {{ nta['percent'] }},
+                                    {{ esh['percent'] }}
                                 ],
                                 backgroundColor: [
                                     'rgba(255, 99, 132, 0.2)',

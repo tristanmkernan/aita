@@ -18,6 +18,11 @@
             margin-bottom: 1rem;
         }
 
+        .mx-1 {
+            margin-left: 1rem;
+            margin-right: 1rem;
+        }
+
         .my-0-5 {
             margin: 0.5rem 0;
         }
@@ -39,6 +44,13 @@
     </style>
 </head>
 <body>
+
+{% if devmode %}
+<div class="notification is-danger has-text-centered mx-1 my-1">
+    WARNING: YOU ARE IN DEVELOPMENT MODE. DON'T FORGET TO TURN IT OFF!
+</div>
+{% endif %}
+
 <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="container">
         <div class="navbar-brand">

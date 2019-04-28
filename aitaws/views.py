@@ -8,18 +8,38 @@ from .tasks import tasks
 def init_views(app):
     @app.route('/')
     def index():
-        yta = PostModel.query.filter(and_(PostModel.yta > PostModel.nta, PostModel.yta > PostModel.esh)).count()
-        nta = PostModel.query.filter(and_(PostModel.nta > PostModel.yta, PostModel.nta > PostModel.esh)).count()
-        esh = PostModel.query.filter(and_(PostModel.esh > PostModel.yta, PostModel.esh > PostModel.nta)).count()
+        yta_count = PostModel.query.filter(and_(PostModel.yta > PostModel.nta, PostModel.yta > PostModel.esh)).count()
+        nta_count = PostModel.query.filter(and_(PostModel.nta > PostModel.yta, PostModel.nta > PostModel.esh)).count()
+        esh_count = PostModel.query.filter(and_(PostModel.esh > PostModel.yta, PostModel.esh > PostModel.nta)).count()
 
-        total = yta + nta + esh
+        total = yta_count + nta_count + esh_count
+
+        yta_percent = 0
+        nta_percent = 0
+        esh_percent = 0
 
         if total > 0:
-            yta = int(100 * yta / total)
-            nta = int(100 * nta / total)
-            esh = int(100 * esh / total)
+            yta_percent = int(100 * yta_count / total)
+            nta_percent = int(100 * nta_count / total)
+            esh_percent = int(100 * esh_count / total)
 
-        return render_template('index.html', yta=yta, nta=nta, esh=esh)
+        data = {
+            'yta': {
+                'percent': yta_percent,
+                'count': yta_count
+            },
+            'nta': {
+                'percent': nta_percent,
+                'count': nta_count
+            },
+            'esh': {
+                'percent': esh_percent,
+                'count': esh_count
+            },
+            'total': total
+        }
+
+        return render_template('index.html', devmode=app.config['DEVELOPMENT'], **data)
 
     @app.route('/scrape')
     def scrape():

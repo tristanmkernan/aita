@@ -1,6 +1,8 @@
 from celery import Celery
+from datetime import datetime
 
 from . import create_app
+from .models import db, ScrapeLogModel
 from .scraper import scrape
 
 # http://docs.celeryproject.org/en/latest/getting-started/first-steps-with-celery.html
@@ -27,10 +29,19 @@ def init_tasks(app=None):
 
     @stalk.task
     def my_scraper():
-        return scrape(app.config['PRAW_CLIENT_ID'],
-                      app.config['PRAW_CLIENT_SECRET'],
-                      app.config['PRAW_USER_AGENT'],
-                      app.config['SCRAPER_NUM_POSTS_TO_SCRAPE'])
+        start = datetime.now()
+
+        scrape(app.config['PRAW_CLIENT_ID'],
+               app.config['PRAW_CLIENT_SECRET'],
+               app.config['PRAW_USER_AGENT'],
+               app.config['SCRAPER_NUM_POSTS_TO_SCRAPE'])
+
+        end = datetime.now()
+
+        log = ScrapeLogModel(start=start, end=end)
+        
+        db.session.add(log)
+        db.session.commit()
 
     tasks['scrape'] = my_scraper
 

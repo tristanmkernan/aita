@@ -10,6 +10,12 @@ class PostModel(db.Model):
     esh = db.Column(db.Integer, default=0)
 
 
+class ScrapeLogModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    start = db.Column(db.DateTime)
+    end = db.Column(db.DateTime)
+
+
 def init_db(app):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
