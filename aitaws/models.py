@@ -16,6 +16,14 @@ class ScrapeLogModel(db.Model):
     end = db.Column(db.DateTime)
 
 
+class DataCacheModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    yta_count = db.Column(db.Integer, default=0)
+    nta_count = db.Column(db.Integer, default=0)
+    esh_count = db.Column(db.Integer, default=0)
+    total = db.Column(db.Integer, default=0)
+
+
 def init_db(app):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

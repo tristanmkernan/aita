@@ -1,18 +1,19 @@
 from flask import render_template
-from sqlalchemy import and_
 
-from .models import PostModel
+from .models import DataCacheModel
 from .tasks import tasks
 
 
 def init_views(app):
     @app.route('/')
     def index():
-        yta_count = PostModel.query.filter(and_(PostModel.yta > PostModel.nta, PostModel.yta > PostModel.esh)).count()
-        nta_count = PostModel.query.filter(and_(PostModel.nta > PostModel.yta, PostModel.nta > PostModel.esh)).count()
-        esh_count = PostModel.query.filter(and_(PostModel.esh > PostModel.yta, PostModel.esh > PostModel.nta)).count()
+        cache = DataCacheModel.query.first()
 
-        total = yta_count + nta_count + esh_count
+        yta_count = cache.yta_count
+        nta_count = cache.nta_count
+        esh_count = cache.esh_count
+
+        total = cache.total
 
         yta_percent = 0
         nta_percent = 0
