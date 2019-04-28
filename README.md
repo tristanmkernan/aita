@@ -9,7 +9,8 @@ To that end, I built this application to track the statistics of petitioners to 
 
 ## How?
 
-Todo
+The main webserver is running Flask with a SQLite database. Celery runs a scheduled task to scrape results and compiles the data 
+into the database for quick retrieval.
 
 ## Let me at it!
 
@@ -42,7 +43,7 @@ $ docker-compose up
 
 Note: in case you want to host this application yourself, be sure to change the secret key in `env/docker.env`!
 
-Visit [localhost:8084](http://localhost:8090/) to access your local installation! 
+Visit [localhost:8090](http://localhost:8090/) to access your local installation! 
 
 
 
