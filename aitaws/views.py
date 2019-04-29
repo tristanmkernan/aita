@@ -12,17 +12,20 @@ def init_views(app):
         yta_count = cache.yta_count
         nta_count = cache.nta_count
         esh_count = cache.esh_count
+        und_count = cache.und_count
 
         total = cache.total
 
         yta_percent = 0
         nta_percent = 0
         esh_percent = 0
+        und_percent = 0
 
         if total > 0:
             yta_percent = int(100 * yta_count / total)
             nta_percent = int(100 * nta_count / total)
             esh_percent = int(100 * esh_count / total)
+            und_percent = int(100 * und_count / total)
 
         data = {
             'yta': {
@@ -36,6 +39,10 @@ def init_views(app):
             'esh': {
                 'percent': esh_percent,
                 'count': esh_count
+            },
+            'und': {
+                'percent': und_percent,
+                'count': und_count
             },
             'total': total
         }

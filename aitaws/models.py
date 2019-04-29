@@ -21,6 +21,7 @@ class DataCacheModel(db.Model):
     yta_count = db.Column(db.Integer, default=0)
     nta_count = db.Column(db.Integer, default=0)
     esh_count = db.Column(db.Integer, default=0)
+    und_count = db.Column(db.Integer, default=0)
     total = db.Column(db.Integer, default=0)
 
 

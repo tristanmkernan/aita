@@ -32,6 +32,12 @@
                 </div>
                 <div class="level-item has-text-centered">
                     <div>
+                        <p class="heading">UND #</p>
+                        <p class="title">{{ und['count'] }}</p>
+                    </div>
+                </div>
+                <div class="level-item has-text-centered">
+                    <div>
                         <p class="heading">Total #</p>
                         <p class="title">{{ total }}</p>
                     </div>
@@ -57,7 +63,7 @@
                 Every so often, the hottest posts from <a href="https://www.reddit.com/r/AmItheAsshole/">/r/AmItheAsshole/</a>
                 are scraped. For each post, the votes
                 are tallied by counting the score of each top-level comment starting with either YTA, NTA, or ESH.
-                The post is marked for whichever of the three receives the highest combined score.
+                The post is marked for whichever of the three receives the majority of the comment score.
             </p>
         </section>
     </div>
@@ -76,19 +82,22 @@
                                 data: [
                                     {{ yta['percent'] }},
                                     {{ nta['percent'] }},
-                                    {{ esh['percent'] }}
+                                    {{ esh['percent'] }},
+                                    {{ und['percent'] }}
                                 ],
                                 backgroundColor: [
-                                    'rgba(255, 99, 132, 0.2)',
-                                    'rgba(54, 162, 235, 0.2)',
-                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(246, 205, 230, 0.8)',
+                                    'rgba(173, 217, 254, 0.8)',
+                                    'rgba(221, 249, 217, 0.8)',
+                                    'rgba(255, 229, 188, 0.8)',
                                 ]
                             },
                         ],
                         labels: [
                             'YTA %',
                             'NTA %',
-                            'ESH %'
+                            'ESH %',
+                            'UND %'
                         ]
                     },
                     options: {}
