@@ -22,10 +22,10 @@ def init_views(app):
         und_percent = 0
 
         if total > 0:
-            yta_percent = int(100 * yta_count / total)
-            nta_percent = int(100 * nta_count / total)
-            esh_percent = int(100 * esh_count / total)
-            und_percent = int(100 * und_count / total)
+            yta_percent = round(100 * yta_count / total, 2)
+            nta_percent = round(100 * nta_count / total, 2)
+            esh_percent = round(100 * esh_count / total, 2)
+            und_percent = round(100 * und_count / total, 2)
 
         data = {
             'yta': {
