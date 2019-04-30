@@ -10,23 +10,15 @@ def init_views(app):
     def index():
         cache = DataCacheModel.query.first()
 
-        yta_count = cache.yta_count
-        nta_count = cache.nta_count
-        esh_count = cache.esh_count
-        und_count = cache.und_count
+        yta_percent = round(100 * cache.yta_count / cache.total, 2)
+        nta_percent = round(100 * cache.nta_count / cache.total, 2)
+        esh_percent = round(100 * cache.esh_count / cache.total, 2)
+        und_percent = round(100 * cache.und_count / cache.total, 2)
 
-        total = cache.total
-
-        yta_percent = 0
-        nta_percent = 0
-        esh_percent = 0
-        und_percent = 0
-
-        if total > 0:
-            yta_percent = round(100 * yta_count / total, 2)
-            nta_percent = round(100 * nta_count / total, 2)
-            esh_percent = round(100 * esh_count / total, 2)
-            und_percent = round(100 * und_count / total, 2)
+        yta_percent_weighted = round(100 * cache.yta_count_weighted / cache.total_weighted, 2)
+        nta_percent_weighted = round(100 * cache.nta_count_weighted / cache.total_weighted, 2)
+        esh_percent_weighted = round(100 * cache.esh_count_weighted / cache.total_weighted, 2)
+        und_percent_weighted = round(100 * cache.und_count_weighted / cache.total_weighted, 2)
 
         top_posts = TopPostCacheModel.query.all()
 
@@ -44,25 +36,52 @@ def init_views(app):
 
         data = {
             'yta': {
-                'percent': yta_percent,
-                'count': yta_count,
+                'base': {
+                    'percent': yta_percent,
+                    'count': cache.yta_count,
+                },
+                'weighted': {
+                    'percent': yta_percent_weighted,
+                    'count': cache.yta_count_weighted
+                },
                 'top': top_yta_posts
             },
             'nta': {
-                'percent': nta_percent,
-                'count': nta_count,
+                'base': {
+                    'percent': nta_percent,
+                    'count': cache.nta_count,
+                },
+                'weighted': {
+                    'percent': nta_percent_weighted,
+                    'count': cache.nta_count_weighted
+                },
                 'top': top_nta_posts
             },
             'esh': {
-                'percent': esh_percent,
-                'count': esh_count,
+                'base': {
+                    'percent': esh_percent,
+                    'count': cache.esh_count,
+                },
+                'weighted': {
+                    'percent': esh_percent_weighted,
+                    'count': cache.esh_count_weighted
+                },
                 'top': top_esh_posts
             },
             'und': {
-                'percent': und_percent,
-                'count': und_count
+                'base': {
+                    'percent': und_percent,
+                    'count': cache.und_count,
+                },
+                'weighted': {
+                    'percent': und_percent_weighted,
+                    'count': cache.und_count_weighted
+                },
             },
-            'total': total
+            'total': {
+                'base': cache.total,
+                'weighted': cache.total_weighted
+            }
         }
 
         return render_template('index.html', devmode=app.config['DEVELOPMENT'], **data)
