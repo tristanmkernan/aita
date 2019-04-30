@@ -38,11 +38,11 @@ def scrape(client_id, client_secret, user_agent, num_posts):
 
         # do not load zero-vote or low-vote posts
         if sum(counts.values()) > 50:
-            data.append((submission.id, submission.title, submission.created, counts))
+            data.append((submission.id, submission.title, submission.created, submission.score, counts))
 
     # persist the data:
     # update record if it exists, otherwise create it
-    for post_id, title, created, counts in data:
+    for post_id, title, created, score, counts in data:
         post = PostModel.query.filter_by(post_id=post_id).first()
 
         if post is None:
@@ -51,6 +51,7 @@ def scrape(client_id, client_secret, user_agent, num_posts):
 
         post.title = title
         post.created = datetime.fromtimestamp(created)
+        post.score = score
         post.yta = counts['yta']
         post.nta = counts['nta']
         post.esh = counts['esh']
@@ -62,9 +63,9 @@ def scrape(client_id, client_secret, user_agent, num_posts):
     # a post is considered YTA if its YTA votes are greater than the sum of its NTA and ESH votes
     # in other words, a post must have 50% or more YTA votes to be marked YTA
     # and likewise for every category
-    yta_query = PostModel.query.filter(PostModel.yta >= (PostModel.nta + PostModel.esh))
-    nta_query = PostModel.query.filter(PostModel.nta >= (PostModel.yta + PostModel.esh))
-    esh_query = PostModel.query.filter(PostModel.esh >= (PostModel.yta + PostModel.nta))
+    yta_query = PostModel.query.filter(PostModel.yta > 0.67 * (PostModel.yta + PostModel.nta + PostModel.esh))
+    nta_query = PostModel.query.filter(PostModel.nta > 0.67 * (PostModel.yta + PostModel.nta + PostModel.esh))
+    esh_query = PostModel.query.filter(PostModel.esh > 0.67 * (PostModel.yta + PostModel.nta + PostModel.esh))
 
     yta_count = yta_query.count()
     nta_count = nta_query.count()

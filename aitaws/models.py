@@ -10,6 +10,7 @@ class PostModel(db.Model):
     yta = db.Column(db.Integer, default=0)
     nta = db.Column(db.Integer, default=0)
     esh = db.Column(db.Integer, default=0)
+    score = db.Column(db.Integer, default=0)
 
 
 class ScrapeLogModel(db.Model):
