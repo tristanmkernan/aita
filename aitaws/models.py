@@ -21,11 +21,18 @@ class ScrapeLogModel(db.Model):
 
 class DataCacheModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+
     yta_count = db.Column(db.Integer, default=0)
     nta_count = db.Column(db.Integer, default=0)
     esh_count = db.Column(db.Integer, default=0)
     und_count = db.Column(db.Integer, default=0)
     total = db.Column(db.Integer, default=0)
+
+    yta_count_weighted = db.Column(db.Integer, default=0)
+    nta_count_weighted = db.Column(db.Integer, default=0)
+    esh_count_weighted = db.Column(db.Integer, default=0)
+    und_count_weighted = db.Column(db.Integer, default=0)
+    total_weighted = db.Column(db.Integer, default=0)
 
 
 class TopPostCacheModel(db.Model):
