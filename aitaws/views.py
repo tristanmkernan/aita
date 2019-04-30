@@ -1,6 +1,7 @@
 from flask import render_template
+from operator import attrgetter
 
-from .models import DataCacheModel
+from .models import DataCacheModel, TopPostCacheModel
 from .tasks import tasks
 
 
@@ -27,18 +28,35 @@ def init_views(app):
             esh_percent = round(100 * esh_count / total, 2)
             und_percent = round(100 * und_count / total, 2)
 
+        top_posts = TopPostCacheModel.query.all()
+
+        top_yta_posts = filter(lambda p: p.category == 'yta', top_posts)
+        top_yta_posts = map(attrgetter('post'), top_yta_posts)
+        top_yta_posts = sorted(top_yta_posts, key=attrgetter('yta'), reverse=True)
+
+        top_nta_posts = filter(lambda p: p.category == 'nta', top_posts)
+        top_nta_posts = map(attrgetter('post'), top_nta_posts)
+        top_nta_posts = sorted(top_nta_posts, key=attrgetter('nta'), reverse=True)
+
+        top_esh_posts = filter(lambda p: p.category == 'esh', top_posts)
+        top_esh_posts = map(attrgetter('post'), top_esh_posts)
+        top_esh_posts = sorted(top_esh_posts, key=attrgetter('esh'), reverse=True)
+
         data = {
             'yta': {
                 'percent': yta_percent,
-                'count': yta_count
+                'count': yta_count,
+                'top': top_yta_posts
             },
             'nta': {
                 'percent': nta_percent,
-                'count': nta_count
+                'count': nta_count,
+                'top': top_nta_posts
             },
             'esh': {
                 'percent': esh_percent,
-                'count': esh_count
+                'count': esh_count,
+                'top': top_esh_posts
             },
             'und': {
                 'percent': und_percent,

@@ -5,6 +5,8 @@ db = SQLAlchemy()
 
 class PostModel(db.Model):
     post_id = db.Column(db.String, primary_key=True)
+    title = db.Column(db.String)
+    created = db.Column(db.DateTime)
     yta = db.Column(db.Integer, default=0)
     nta = db.Column(db.Integer, default=0)
     esh = db.Column(db.Integer, default=0)
@@ -23,6 +25,13 @@ class DataCacheModel(db.Model):
     esh_count = db.Column(db.Integer, default=0)
     und_count = db.Column(db.Integer, default=0)
     total = db.Column(db.Integer, default=0)
+
+
+class TopPostCacheModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey(PostModel.post_id))
+    post = db.relationship(PostModel, uselist=False)
+    category = db.Column(db.String)
 
 
 def init_db(app):

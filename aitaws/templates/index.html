@@ -66,6 +66,50 @@
                 The post is marked for whichever of the three receives the majority of the comment score.
             </p>
         </section>
+
+        <section class="section">
+            <p class="heading">Hall of Fame</p>
+
+            {% set tables = [("You're DEFINITELY the Asshole", yta['top']), ("Total Vindication", nta['top']), ("Everyone Sucks Here", esh['top'])] %}
+
+            {% for title, posts in tables %}
+            <p class="heading my-1">
+                {{ title }}
+            </p>
+
+            <table class="table is-striped is-fullwidth">
+                <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Link</th>
+                    <th>YTA Votes</th>
+                    <th>NTA Votes</th>
+                    <th>ESH Votes</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for post in posts %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+
+                        <td>
+                            <a target="_blank"
+                               href="https://www.reddit.com/r/AmItheAsshole/comments/{{ post.post_id }}/">
+                                {{ post.title }}
+                                <i class="fa fa-external-link"></i>
+                            </a>
+                        </td>
+                        <td>{{ post.yta }}</td>
+                        <td>{{ post.nta }}</td>
+                        <td>{{ post.esh }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {% endfor %}
+
+        </section>
     </div>
 {% endblock %}
 

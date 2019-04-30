@@ -1,8 +1,9 @@
 from collections import Counter
+from datetime import datetime
 from praw import Reddit
 from praw.models import MoreComments
 
-from .models import db, PostModel, DataCacheModel
+from .models import db, PostModel, DataCacheModel, TopPostCacheModel
 
 
 # https://praw.readthedocs.io/en/latest/index.html
@@ -17,6 +18,12 @@ def scrape(client_id, client_secret, user_agent, num_posts):
     data = []
 
     for submission in reddit.subreddit('AmItheAsshole').hot(limit=num_posts):
+
+        # ignore meta, update, etc. posts
+        title = submission.title.lower()
+        if not (title.startswith('aita') or title.startswith('wibta')):
+            continue
+
         counts = Counter()
 
         for comment in submission.comments:
@@ -31,17 +38,19 @@ def scrape(client_id, client_secret, user_agent, num_posts):
 
         # do not load zero-vote or low-vote posts
         if sum(counts.values()) > 50:
-            data.append((submission.id, counts))
+            data.append((submission.id, submission.title, submission.created, counts))
 
     # persist the data:
     # update record if it exists, otherwise create it
-    for post_id, counts in data:
+    for post_id, title, created, counts in data:
         post = PostModel.query.filter_by(post_id=post_id).first()
 
         if post is None:
             post = PostModel(post_id=post_id)
             db.session.add(post)
 
+        post.title = title
+        post.created = datetime.fromtimestamp(created)
         post.yta = counts['yta']
         post.nta = counts['nta']
         post.esh = counts['esh']
@@ -53,16 +62,20 @@ def scrape(client_id, client_secret, user_agent, num_posts):
     # a post is considered YTA if its YTA votes are greater than the sum of its NTA and ESH votes
     # in other words, a post must have 50% or more YTA votes to be marked YTA
     # and likewise for every category
-    yta_count = PostModel.query.filter(PostModel.yta >= (PostModel.nta + PostModel.esh)).count()
-    nta_count = PostModel.query.filter(PostModel.nta >= (PostModel.yta + PostModel.esh)).count()
-    esh_count = PostModel.query.filter(PostModel.esh >= (PostModel.yta + PostModel.nta)).count()
+    yta_query = PostModel.query.filter(PostModel.yta >= (PostModel.nta + PostModel.esh))
+    nta_query = PostModel.query.filter(PostModel.nta >= (PostModel.yta + PostModel.esh))
+    esh_query = PostModel.query.filter(PostModel.esh >= (PostModel.yta + PostModel.nta))
+
+    yta_count = yta_query.count()
+    nta_count = nta_query.count()
+    esh_count = esh_query.count()
 
     total = PostModel.query.count()
 
     # undecided (und) posts are those without a clear majority winner
     und_count = total - yta_count - nta_count - esh_count
 
-    # either update the existing cache record or create one
+    # update or create the existing counts cache record
     cache = DataCacheModel.query.first()
 
     if cache is None:
@@ -74,5 +87,24 @@ def scrape(client_id, client_secret, user_agent, num_posts):
     cache.esh_count = esh_count
     cache.und_count = und_count
     cache.total = total
+
+    db.session.commit()
+
+    # update the top posts: delete all current top posts, then insert new ones
+    TopPostCacheModel.query.delete()
+    db.session.commit()
+
+    yta_top = yta_query.order_by(PostModel.yta.desc()).limit(10).all()
+    nta_top = nta_query.order_by(PostModel.nta.desc()).limit(10).all()
+    esh_top = esh_query.order_by(PostModel.esh.desc()).limit(10).all()
+
+    for post in yta_top:
+        db.session.add(TopPostCacheModel(post=post, category='yta'))
+
+    for post in nta_top:
+        db.session.add(TopPostCacheModel(post=post, category='nta'))
+
+    for post in esh_top:
+        db.session.add(TopPostCacheModel(post=post, category='esh'))
 
     db.session.commit()
