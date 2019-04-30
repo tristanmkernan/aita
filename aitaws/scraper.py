@@ -2,6 +2,7 @@ from collections import Counter
 from datetime import datetime
 from praw import Reddit
 from praw.models import MoreComments
+from sqlalchemy import func
 
 from .models import db, PostModel, DataCacheModel, TopPostCacheModel
 
@@ -76,6 +77,30 @@ def scrape(client_id, client_secret, user_agent, num_posts):
     # undecided (und) posts are those without a clear majority winner
     und_count = total - yta_count - nta_count - esh_count
 
+    # calculate the weighted scores
+
+    yta_count_weighted = yta_query \
+        .with_entities(func.sum(PostModel.yta).label('count_weighted')) \
+        .first() \
+        .count_weighted
+
+    nta_count_weighted = nta_query \
+        .with_entities(func.sum(PostModel.nta).label('count_weighted')) \
+        .first() \
+        .count_weighted
+
+    esh_count_weighted = esh_query \
+        .with_entities(func.sum(PostModel.esh).label('count_weighted')) \
+        .first() \
+        .count_weighted
+
+    total_weighted = PostModel.query \
+        .with_entities(func.sum(PostModel.nta + PostModel.yta + PostModel.esh).label('count_weighted')) \
+        .first() \
+        .count_weighted
+
+    und_count_weighted = total_weighted - (yta_count_weighted + nta_count_weighted + esh_count_weighted)
+
     # update or create the existing counts cache record
     cache = DataCacheModel.query.first()
 
@@ -88,6 +113,12 @@ def scrape(client_id, client_secret, user_agent, num_posts):
     cache.esh_count = esh_count
     cache.und_count = und_count
     cache.total = total
+
+    cache.yta_count_weighted = yta_count_weighted
+    cache.nta_count_weighted = nta_count_weighted
+    cache.esh_count_weighted = esh_count_weighted
+    cache.und_count_weighted = und_count_weighted
+    cache.total_weighted = total_weighted
 
     db.session.commit()
 

@@ -4,9 +4,9 @@
 
 {% block main %}
     <div class="container has-text-centered my-1 flexify-me">
-        <h1 class="title">
+        <h2 class="title">
             Is Reddit the Asshole?
-        </h1>
+        </h2>
 
         <canvas id="myChart"></canvas>
 
@@ -15,38 +15,88 @@
                 <div class="level-item has-text-centered">
                     <div>
                         <p class="heading">YTA #</p>
-                        <p class="title">{{ yta['count'] }}</p>
+                        <p class="title">{{ yta['base']['count'] }}</p>
                     </div>
                 </div>
                 <div class="level-item has-text-centered">
                     <div>
                         <p class="heading">NTA #</p>
-                        <p class="title">{{ nta['count'] }}</p>
+                        <p class="title">{{ nta['base']['count'] }}</p>
                     </div>
                 </div>
                 <div class="level-item has-text-centered">
                     <div>
                         <p class="heading">ESH #</p>
-                        <p class="title">{{ esh['count'] }}</p>
+                        <p class="title">{{ esh['base']['count'] }}</p>
                     </div>
                 </div>
                 <div class="level-item has-text-centered">
                     <div>
                         <p class="heading">UND #</p>
-                        <p class="title">{{ und['count'] }}</p>
+                        <p class="title">{{ und['base']['count'] }}</p>
                     </div>
                 </div>
                 <div class="level-item has-text-centered">
                     <div>
                         <p class="heading">Total #</p>
-                        <p class="title">{{ total }}</p>
+                        <p class="title">{{ total['base'] }}</p>
                     </div>
                 </div>
             </nav>
         </section>
 
+        <hr>
+
+        <h2 class="title">
+            Is Reddit Perceived to Be the Asshole?
+        </h2>
+
+        <canvas id="myChartWeighted"></canvas>
+
         <section class="section">
-            <p class="heading">What is this?</p>
+            <nav class="level">
+                <div class="level-item has-text-centered">
+                    <div>
+                        <p class="heading">YTA #</p>
+                        <p class="title">{{ yta['weighted']['count'] }}</p>
+                    </div>
+                </div>
+                <div class="level-item has-text-centered">
+                    <div>
+                        <p class="heading">NTA #</p>
+                        <p class="title">{{ nta['weighted']['count'] }}</p>
+                    </div>
+                </div>
+                <div class="level-item has-text-centered">
+                    <div>
+                        <p class="heading">ESH #</p>
+                        <p class="title">{{ esh['weighted']['count'] }}</p>
+                    </div>
+                </div>
+                <div class="level-item has-text-centered">
+                    <div>
+                        <p class="heading">UND #</p>
+                        <p class="title">{{ und['weighted']['count'] }}</p>
+                    </div>
+                </div>
+                <div class="level-item has-text-centered">
+                    <div>
+                        <p class="heading">Total #</p>
+                        <p class="title">{{ total['weighted'] }}</p>
+                    </div>
+                </div>
+            </nav>
+        </section>
+
+        <hr>
+
+        <section class="section">
+            <h2 class="title">
+                About
+            </h2>
+
+            <p class="heading">Motivation</p>
+
             <p>
                 After seeing <a href="https://www.reddit.com/r/AmItheAsshole/">/r/AmItheAsshole/</a> in my feed a bit
                 too often, and finding that MOST people were definitely the asshole and merely seeking validation for
@@ -63,49 +113,56 @@
                 Every so often, the hottest posts from <a href="https://www.reddit.com/r/AmItheAsshole/">/r/AmItheAsshole/</a>
                 are scraped. For each post, the votes
                 are tallied by counting the score of each top-level comment starting with either YTA, NTA, or ESH.
-                The post is marked for whichever of the three receives the majority of the comment score.
+                The post is marked for whichever of the three receives the super-majority, meaning 67% or more, of the comment score.
+            </p>
+            <p>
+                The perceived graph uses the same method as above, but also weights each post according to its post score.
+                A high post score correlates to a high chance of appearing in your feed - meaning this is more like
+                the reddit you experience daily!
             </p>
         </section>
 
-        <section class="section">
-            <p class="heading">Hall of Fame</p>
+        <hr>
 
-            {% set tables = [("You're DEFINITELY the Asshole", yta['top']), ("Total Vindication", nta['top']), ("Everyone Sucks Here", esh['top'])] %}
+        <section class="section">
+            <h2 class="title">Hall of Fame</h2>
+
+            {% set tables = [("DEFINITELY the Asshole", yta['top']), ("Total Vindication", nta['top']), ("Everyone Sucks Here", esh['top'])] %}
 
             {% for title, posts in tables %}
-            <p class="heading my-section-header">
-                {{ title }}
-            </p>
+                <p class="heading my-section-header">
+                    {{ title }}
+                </p>
 
-            <table class="table is-striped is-fullwidth">
-                <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Link</th>
-                    <th>YTA Votes</th>
-                    <th>NTA Votes</th>
-                    <th>ESH Votes</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for post in posts %}
+                <table class="table is-striped is-fullwidth">
+                    <thead>
                     <tr>
-                        <td>{{ loop.index }}</td>
-
-                        <td>
-                            <a target="_blank"
-                               href="https://www.reddit.com/r/AmItheAsshole/comments/{{ post.post_id }}/">
-                                {{ post.title }}
-                                <i class="fa fa-external-link"></i>
-                            </a>
-                        </td>
-                        <td>{{ post.yta }}</td>
-                        <td>{{ post.nta }}</td>
-                        <td>{{ post.esh }}</td>
+                        <th>Rank</th>
+                        <th>Link</th>
+                        <th>YTA Votes</th>
+                        <th>NTA Votes</th>
+                        <th>ESH Votes</th>
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {% for post in posts %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+
+                            <td>
+                                <a target="_blank"
+                                   href="https://www.reddit.com/r/AmItheAsshole/comments/{{ post.post_id }}/">
+                                    {{ post.title }}
+                                    <i class="fa fa-external-link"></i>
+                                </a>
+                            </td>
+                            <td>{{ post.yta }}</td>
+                            <td>{{ post.nta }}</td>
+                            <td>{{ post.esh }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
 
             {% endfor %}
 
@@ -124,10 +181,40 @@
                         datasets: [
                             {
                                 data: [
-                                    {{ yta['percent'] }},
-                                    {{ nta['percent'] }},
-                                    {{ esh['percent'] }},
-                                    {{ und['percent'] }}
+                                    {{ yta['base']['percent'] }},
+                                    {{ nta['base']['percent'] }},
+                                    {{ esh['base']['percent'] }},
+                                    {{ und['base']['percent'] }}
+                                ],
+                                backgroundColor: [
+                                    'rgba(246, 205, 230, 0.8)',
+                                    'rgba(173, 217, 254, 0.8)',
+                                    'rgba(221, 249, 217, 0.8)',
+                                    'rgba(255, 229, 188, 0.8)',
+                                ]
+                            },
+                        ],
+                        labels: [
+                            'YTA %',
+                            'NTA %',
+                            'ESH %',
+                            'UND %'
+                        ]
+                    },
+                    options: {}
+                });
+
+                var otherCtx = document.getElementById('myChartWeighted').getContext('2d');
+                var myOtherChart = new Chart(otherCtx, {
+                    type: 'doughnut',
+                    data: {
+                        datasets: [
+                            {
+                                data: [
+                                    {{ yta['weighted']['percent'] }},
+                                    {{ nta['weighted']['percent'] }},
+                                    {{ esh['weighted']['percent'] }},
+                                    {{ und['weighted']['percent'] }}
                                 ],
                                 backgroundColor: [
                                     'rgba(246, 205, 230, 0.8)',
