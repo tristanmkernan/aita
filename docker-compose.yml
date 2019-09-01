@@ -9,22 +9,3 @@ services:
     restart: always
     volumes:
       - ${PWD}/aitaws/prod.db:/app/aitaws/prod.db
-  worker:
-    environment:
-      AITAWS_SETTINGS: "/app/env/docker.env"
-    build: .
-    command: celery worker -A aitaws.worker -l info
-    restart: always
-    volumes:
-      - ${PWD}/aitaws/prod.db:/app/aitaws/prod.db
-  scheduler:
-    environment:
-      AITAWS_SETTINGS: "/app/env/docker.env"
-    build: .
-    command: celery beat -A aitaws.worker -l info
-    restart: always
-    volumes:
-      - ${PWD}/aitaws/prod.db:/app/aitaws/prod.db
-  redis:
-    image: redis:alpine
-    restart: always

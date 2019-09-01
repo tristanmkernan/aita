@@ -1,8 +1,9 @@
+from datetime import datetime
 from flask import render_template
 from operator import attrgetter
 
-from .models import DataCacheModel, TopPostCacheModel
-from .tasks import tasks
+from .models import DataCacheModel, TopPostCacheModel, ScrapeLogModel, db
+from .scraper import scrape
 
 
 def init_views(app):
@@ -87,9 +88,21 @@ def init_views(app):
         return render_template('index.html', devmode=app.config['DEVELOPMENT'], **data)
 
     @app.route('/scrape')
-    def scrape():
-        if app.config['DEVELOPMENT']:
-            tasks['scrape'].delay()
+    def scraper():
+        start = datetime.now()
+
+        scrape(app.config['PRAW_CLIENT_ID'],
+               app.config['PRAW_CLIENT_SECRET'],
+               app.config['PRAW_USER_AGENT'],
+               app.config['SCRAPER_NUM_POSTS_TO_SCRAPE'])
+
+        end = datetime.now()
+
+        log = ScrapeLogModel(start=start, end=end)
+
+        db.session.add(log)
+        db.session.commit()
+
         return 'OK', 200
 
     @app.route('/about')

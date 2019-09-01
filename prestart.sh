@@ -4,5 +4,4 @@
 # sleep 5;
 
 # initialize the database
-touch /app/aitaws/prod.db
 flask create_db

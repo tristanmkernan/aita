@@ -13,9 +13,6 @@ def create_app():
     from .views import init_views
     init_views(app)
 
-    from .tasks import init_tasks
-    init_tasks(app)
-
     from .cli import init_cli
     init_cli(app)
 
