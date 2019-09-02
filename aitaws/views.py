@@ -35,6 +35,8 @@ def init_views(app):
         top_esh_posts = map(attrgetter('post'), top_esh_posts)
         top_esh_posts = sorted(top_esh_posts, key=attrgetter('esh'), reverse=True)
 
+        latest_scrape = ScrapeLogModel.query.order_by(ScrapeLogModel.end.desc()).first()
+
         data = {
             'yta': {
                 'base': {
@@ -82,7 +84,8 @@ def init_views(app):
             'total': {
                 'base': cache.total,
                 'weighted': cache.total_weighted
-            }
+            },
+            'latest_scrape': latest_scrape.end.strftime("%Y-%m-%d %H:%M:%S")
         }
 
         return render_template('index.html', devmode=app.config['DEVELOPMENT'], **data)
